@@ -3,13 +3,25 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './index.js',
+    entry: './index.jsx',
     output: {
         filename: 'bundle.js'
     },
     module: {
         rules: [
-            {test: /\.css$/, use: [ {loader: 'style-loader'}, {loader: 'css-loader'} ]}
+            {test: /\.css$/, use: [ {loader: 'style-loader'}, {loader: 'css-loader'} ]},
+            {
+                test: /.jsx?$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/,
+                query: {
+                    presets: ['env', 'react']
+                }
+            },
+            {
+                test: /\.scss$/,
+                loaders: ['style-loader', 'css-loader', 'sass-loader']
+            }
         ]
     },
     devServer: {
@@ -22,5 +34,8 @@ module.exports = {
             title: 'Test App',
         }),
         new webpack.HotModuleReplacementPlugin(),
-    ]
+    ],
+    resolve: {
+        extensions: ['.js', '.jsx']
+    }
 }
